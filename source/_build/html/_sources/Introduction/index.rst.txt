@@ -1,45 +1,49 @@
 Introduction
-===============
-这是个Unity着色器插件而不是流体物理模拟插件，用于将粒子数据渲染成为平滑的液体表面。
-它适用于渲染以粒子为模拟单元的仿真系统。
+================
+This is a Unity shader plugin, not a fluid physics simulation plugin. It is used to render particle data into a smooth liquid surface.
+It is suitable for rendering simulation systems that use particles as simulation units.
 
-.. note::
-    这个插件的原理是基于\ ``Screen Space Rendering With Curvature Flow``\ 这篇论文。
+.. note:: The principle of this plugin is based on the paper ``Screen Space Rendering With Curvature Flow``.
 
-流体仿真一般都是基于网格或者粒子为单元的，考虑实时性通常依旧使用的是基于SPH的方法(一种基于粒子的方法)。
+Fluid simulation is generally based on grids or particles. In consideration of real-time performance, the SPH-based method (a particle-based method) is still used.
 
-Unity并没有非常合适的流体渲染插件，这是这个插件出现的主要原因。我也注意到确实有一个基于同样原理的实现在Asset Store上。
+Unity does not have a very suitable fluid rendering plugin, which is the main reason for this plugin. I also noticed that there is indeed an implementation based on the same principle on the Asset Store.
 
-在使用的过程中，我觉得自己可以做得更好，不管从效率还是视觉效果或者易用性以及扩展性上，因此这个插件诞生了。
+In the process of using, I feel that I can do better, no matter from the efficiency or visual effects or ease of use and scalability, so this plugin was born.
 
-.. note::
-    这个插件在 `Unity 2019.3.0f5 (64-bit)` 版本上进行开发，支持 `Unity Builtin Shader System` 以及 `Unity URP System` 。在 `Unity Builtin Shader System` 上运行效率更好，并没有针对 `URP` 优化.
+.. note:: This plugin is developed on `Unity 2019.3.0f5 (64-bit)` version and supports `Unity Builtin Shader System` and `Unity URP System`. It runs more efficiently on the Unity Builtin Shader System and is not optimized for URP.
 
-.. warning:: 
-    ``OnRenderObject`` 需要被支持，在LWRP上应该是跑不起来的。
+.. warning:: ``OnRenderObject`` needs to be supported. It cannot run on LWRP.
 
 
-我准备了数个Demo 场景:
+I prepared several demo scenarios:
 
-.. figure:: ../images/DEMO_File.png
+.. figure:: images / DEMO_File.png
    :align: center
    
    [DEMO] Load particles from file
 
-.. figure:: ../images/DEMO_Blood.png
+.. figure:: images / DEMO_Blood.png
    :align: center
    
    [DEMO] Blood
 
-.. figure:: ../images/Demo_Single_ParticleSystem.png
+.. figure:: images / Demo_Single_ParticleSystem.png
    :align: center
    
    [DEMO] Single ParticleSystem
 
-.. figure:: ../images/Demo_Multiple_ParticleSystem.png
+.. figure:: images / Demo_Multiple_ParticleSystem.png
    :align: center
    
    [DEMO] Multiple ParticleSystems
 
-.. note:: By default, the Gameobject named ``Renderer`` is off on each demo, **enable it** to see the effects. If still not work, **reactive** the `ParticleSource` GameObject and `Renderer` Gameobject.
+.. note ::
+   By default, the Gameobject named ``Renderer`` is off on each demo, **enable it** to see the effects. If still not work, **reactive** the `ParticleSource` GameObject and `Renderer` Gameobject.
 
+
+.. toctree::
+   :max_depth:3
+
+   basic_setup.rst
+   workflow.rst
