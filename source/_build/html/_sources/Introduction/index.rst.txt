@@ -18,12 +18,28 @@ Unity并没有非常合适的流体渲染插件，这是这个插件出现的主
 .. warning:: 
     ``OnRenderObject`` 需要被支持，在LWRP上应该是跑不起来的。
 
-我准备了数个Demo 场景，以下是它们的简要介绍。
 
-.. image::
+我准备了数个Demo 场景:
 
-.. image::
+.. figure:: ../images/DEMO_File.png
+   :align: center
+   
+   [DEMO] Load particles from file
 
-.. image::
+.. figure:: ../images/DEMO_Blood.png
+   :align: center
+   
+   [DEMO] Blood
 
-.. image::
+.. figure:: ../images/Demo_Single_ParticleSystem.png
+   :align: center
+   
+   [DEMO] Single ParticleSystem
+
+.. figure:: ../images/Demo_Multiple_ParticleSystem.png
+   :align: center
+   
+   [DEMO] Multiple ParticleSystems
+
+.. note:: By default, the Gameobject named ``Renderer`` is off on each demo, **enable it** to see the effects. If still not work, **reactive** the `ParticleSource` GameObject and `Renderer` Gameobject.
+
