@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="1. Basic Setup" href="basic_setup.html" />
+    <link rel="next" title="Advance Topics" href="../advance_topics/index.html" />
     <link rel="prev" title="Welcome to SSF Particle2Fluid Shader Util’s documentation!" href="../index.html" /> 
 </head>
 
@@ -82,11 +82,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="basic_setup.html">1. Basic Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflow.html">2. WorkFlow</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../advance_topics/index.html">Advance Topics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
 </ul>
@@ -155,12 +151,24 @@
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="永久链接至标题">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="basic_setup.html">1. Basic Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflow.html">2. WorkFlow</a></li>
-</ul>
+<p>这是个Unity着色器插件而不是流体物理模拟插件，用于将粒子数据渲染成为平滑的液体表面。
+它适用于渲染以粒子为模拟单元的仿真系统。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这个插件的原理是基于<code class="docutils literal notranslate"><span class="pre">Screen</span> <span class="pre">Space</span> <span class="pre">Rendering</span> <span class="pre">With</span> <span class="pre">Curvature</span> <span class="pre">Flow</span></code>这篇论文。</p>
 </div>
+<p>流体仿真一般都是基于网格或者粒子为单元的，考虑实时性通常依旧使用的是基于SPH的方法(一种基于粒子的方法)。</p>
+<p>Unity并没有非常合适的流体渲染插件，这是这个插件出现的主要原因。我也注意到确实有一个基于同样原理的实现在Asset Store上。</p>
+<p>在使用的过程中，我觉得自己可以做得更好，不管从效率还是视觉效果或者易用性以及扩展性上，因此这个插件诞生了。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这个插件在 <cite>Unity 2019.3.0f5 (64-bit)</cite> 版本上进行开发，支持 <cite>Unity Builtin Shader System</cite> 以及 <cite>Unity URP System</cite> 。在 <cite>Unity Builtin Shader System</cite> 上运行效率更好，并没有针对 <cite>URP</cite> 优化.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p><code class="docutils literal notranslate"><span class="pre">OnRenderObject</span></code> 需要被支持，在LWRP上应该是跑不起来的。</p>
+</div>
+<p>我准备了数个Demo 场景，以下是它们的简要介绍。</p>
 </div>
 
 
@@ -171,7 +179,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="basic_setup.html" class="btn btn-neutral float-right" title="1. Basic Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../advance_topics/index.html" class="btn btn-neutral float-right" title="Advance Topics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to SSF Particle2Fluid Shader Util’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
