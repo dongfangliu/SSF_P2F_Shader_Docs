@@ -6,17 +6,17 @@
 Welcome to SSF Particle2Fluid Shader Util's documentation!
 ==========================================================
 
-这是个Unity着色器插件而不是流体物理模拟插件，用于将粒子数据渲染成为平滑的液体表面。
-它适用于渲染以粒子为模拟单元的仿真系统。
+This is a Unity shader plugin, not a fluid physics simulation plugin. It is used to render particle data into a smooth liquid surface.
+It is suitable for rendering simulation systems that use particles as simulation units.
 
 .. images:: comparision.png 
 
-它具有以下非常良好的性质:
+It has the following very good properties:
 
-* 优秀的实时运行效率
-* 出色的表面效果
-* 开放的数据定制接口
-* 完善的文档和改进指引
+* Excellent real-time operation efficiency
+* Excellent surface effect
+* Open data customization interface
+* Complete documentation and improvement guidelines
 
 .. toctree::
    :maxdepth: 2
