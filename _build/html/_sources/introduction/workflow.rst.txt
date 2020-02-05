@@ -10,7 +10,7 @@ Setup Scene
 
 The Inspector should looks like:
 
-.. image:: /images/workflow_-1.png
+.. image:: ../images/workflow_-1.png
 
 
 Configure ParticleSource
@@ -19,12 +19,12 @@ Configure ParticleSource
 #. Click Add Component, Add ``SSF_LoadParticlesFromParticleSystem``.
    The Inspector should appears as follows:
    
-   .. image:: /images/workflow_0.png
+   .. image:: ../images/workflow_0.png
      :scale: 50% 
 
 #. Assign shader and the ParticleSystem just as follows:
    
-   .. image:: /images/workflow_1.png
+   .. image:: ../images/workflow_1.png
      :scale: 50% 
 #. Disable and then enable the Component to take effect.
 #. Now Toggle on ``Visualize``, black spheres can be viewed in the `Scene` Window and `Game` Window.
@@ -37,7 +37,7 @@ Cofigure Renderer
 #. Click Add Component, Add ``SSF_TextureGenerator``. This should be many missing values in the inpsector.
    Assign as follows:
 
-   .. image:: /images/workflow_2.png
+   .. image:: ../images/workflow_2.png
      :scale: 50% 
 
 #. Disable and then enable the Component to take effect.
@@ -49,7 +49,7 @@ Congratulations!
 ------------------
 From `Scene` View, fluid-like shape can already be viewed .
 
-.. image:: /images/workflow_3.png
+.. image:: ../images/workflow_3.png
 
 It's not cool enough, right?
 
