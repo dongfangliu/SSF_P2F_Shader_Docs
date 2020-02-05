@@ -18,22 +18,22 @@ In the process of using, I feel that I can do better, no matter from the efficie
 
 I prepared several demo scenarios:
 
-.. figure:: images / DEMO_File.png
+.. figure:: /images / DEMO_File.png
    :align: center
    
    [DEMO] Load particles from file
 
-.. figure:: images / DEMO_Blood.png
+.. figure:: /images / DEMO_Blood.png
    :align: center
    
    [DEMO] Blood
 
-.. figure:: images / Demo_Single_ParticleSystem.png
+.. figure:: /images / Demo_Single_ParticleSystem.png
    :align: center
    
    [DEMO] Single ParticleSystem
 
-.. figure:: images / Demo_Multiple_ParticleSystem.png
+.. figure:: /images / Demo_Multiple_ParticleSystem.png
    :align: center
    
    [DEMO] Multiple ParticleSystems
