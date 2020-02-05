@@ -1,9 +1,0 @@
-basics
-========
-
-.. toctree::
-   :max_depth:2
-   :numbered:
-   
-   basic_setup.rst
-   workflow.rst
