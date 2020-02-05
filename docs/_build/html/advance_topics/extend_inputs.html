@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Extend Particle Inputs &#8212; SSF_Particle2Fluid_ShaderUtil 0.0.3 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Surface Shading" href="surface_shading.html" />
+    <link rel="prev" title="Advance Topics" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="extend-particle-inputs">
+<h1>Extend Particle Inputs<a class="headerlink" href="#extend-particle-inputs" title="Permalink to this headline">¶</a></h1>
+<p>Considering that users may have their own source of particle data, such as a particle solution system running in parallel with the GPU, or imported pre-made particle data, here we will explain how to extend the input of particle data.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">SSF</span> <span class="pre">Particle2Fluid</span> <span class="pre">ShaderUtil</span> <span class="pre">(SSF)</span></code> ,the input of particles is implemented by the base class <code class="docutils literal notranslate"><span class="pre">SSF_ParticleSource</span></code> .</p>
+<div class="section" id="particle-data-struct">
+<h2>Particle Data Struct<a class="headerlink" href="#particle-data-struct" title="Permalink to this headline">¶</a></h2>
+<p>The structure of particle data in SSF is as follows:</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">struct</span> <span class="nc">SSF_particle</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Vector3</span> <span class="n">position</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">Color</span> <span class="n">color</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">float</span> <span class="n">radius</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you modify the particle’s data structure, you need to pay attention to replacing 32 in <code class="docutils literal notranslate"><span class="pre">particleBuffer</span> <span class="pre">=</span> <span class="pre">new</span> <span class="pre">ComputeBuffer</span> <span class="pre">(getParticleNum</span> <span class="pre">(),</span> <span class="pre">32);</span></code> in <strong>SSF_ParticleSource.cs</strong> with the number of bytes of particle data. At the same time, corresponding changes should be made in <code class="docutils literal notranslate"><span class="pre">DepthColorThickness.shader</span></code> and <code class="docutils literal notranslate"><span class="pre">NoiseShader.shader</span></code>.</p>
+</div>
+</div>
+<div class="section" id="explain-ssf-particlesource">
+<h2>Explain SSF_ParticleSource<a class="headerlink" href="#explain-ssf-particlesource" title="Permalink to this headline">¶</a></h2>
+<p>The input and update of extended data is to create a new class inheriting from <code class="docutils literal notranslate"><span class="pre">SSF_ParticleSource</span></code> and implement the corresponding virtual function.</p>
+<p>The following two member variables exist in <code class="docutils literal notranslate"><span class="pre">SSF_ParticleSource</span></code>:</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">protected</span> <span class="n">ComputeBuffer</span> <span class="n">particleBuffer</span><span class="p">;</span><span class="c1">// Buffer sent to GPU</span>
+<span class="k">protected</span> <span class="n">SSF_particle</span><span class="p">[]</span> <span class="n">particlesData</span><span class="p">;</span><span class="c1">// Particle Data for above buffer</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">particleBuffer</span></code> is used to provide data to <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code> to generate related textures for rendering.</p>
+<p>You can notice that the following member function modifiers in <code class="docutils literal notranslate"><span class="pre">SSF_ParticleSource</span></code> are <cite>public virtual</cite>:</p>
+<ul class="simple">
+<li><p>setupParticleBufferData ()</p></li>
+<li><p>updateParticleBufferData ()</p></li>
+</ul>
+<p>In <code class="docutils literal notranslate"><span class="pre">setupParticleBufferData</span></code> , <code class="docutils literal notranslate"><span class="pre">particlesData</span></code> needs to be created and assigned, and updated in <code class="docutils literal notranslate"><span class="pre">updateParticleBufferData</span> <span class="pre">()</span></code> , neither of these operations need to involve <code class="docutils literal notranslate"><span class="pre">particleBuffer</span></code>.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>The simplest example is <code class="docutils literal notranslate"><span class="pre">SSF_LoadParticlesFromFile.cs</span></code>.</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">SSF_LoadParticlesFromFile</span> <span class="p">:</span> <span class="n">SSF_ParticleSource</span>
+   <span class="p">{</span>
+       <span class="k">public</span> <span class="n">UnityEngine</span><span class="p">.</span><span class="n">Object</span> <span class="n">particleFile</span><span class="p">;</span>
+       <span class="k">public</span> <span class="kt">float</span> <span class="n">particleRadius</span><span class="p">;</span>
+       <span class="k">public</span> <span class="n">Color</span> <span class="n">particleColor</span><span class="p">;</span>
+<span class="na">       [Range(0,2)]</span>
+       <span class="k">public</span> <span class="kt">int</span> <span class="n">positionOrder_0</span><span class="p">=</span><span class="m">0</span><span class="p">;</span>
+<span class="na">       [Range(0,2)]</span>
+       <span class="k">public</span> <span class="kt">int</span> <span class="n">positionOrder_1</span><span class="p">=</span><span class="m">2</span><span class="p">;</span>
+<span class="na">       [Range(0,2)]</span>
+       <span class="k">public</span> <span class="kt">int</span> <span class="n">positionOrder_2</span><span class="p">=</span><span class="m">1</span><span class="p">;</span>
+
+       <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">setupParticleBufferData</span><span class="p">()</span>
+       <span class="p">{</span>
+           <span class="k">base</span><span class="p">.</span><span class="n">setupParticleBufferData</span><span class="p">();</span>
+           <span class="k">if</span> <span class="p">(</span><span class="n">particleFile</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+           <span class="p">{</span>
+               <span class="n">TextAsset</span> <span class="n">asset</span> <span class="p">=</span> <span class="n">particleFile</span> <span class="k">as</span> <span class="n">TextAsset</span><span class="p">;</span>
+               <span class="kt">string</span><span class="p">[]</span> <span class="n">striparr</span> <span class="p">=</span> <span class="n">asset</span><span class="p">.</span><span class="n">text</span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;\r\n&quot;</span><span class="p">,</span> <span class="s">&quot; &quot;</span> <span class="p">},</span> <span class="n">StringSplitOptions</span><span class="p">.</span><span class="n">RemoveEmptyEntries</span><span class="p">);</span>
+               <span class="n">particle_num</span> <span class="p">=</span> <span class="n">striparr</span><span class="p">.</span><span class="n">Length</span> <span class="p">/</span> <span class="m">3</span><span class="p">;</span>
+               <span class="n">print</span><span class="p">(</span><span class="s">&quot;Loaded particles : &quot;</span> <span class="p">+</span> <span class="n">particle_num</span><span class="p">);</span>
+               <span class="n">particlesData</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SSF_particle</span><span class="p">[</span><span class="n">particle_num</span><span class="p">];</span>
+               <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">particle_num</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+               <span class="p">{</span>
+                   <span class="n">particlesData</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">Convert</span><span class="p">.</span><span class="n">ToSingle</span><span class="p">(</span><span class="n">striparr</span><span class="p">[</span><span class="m">3</span> <span class="p">*</span> <span class="n">i</span><span class="p">+</span><span class="n">positionOrder_0</span><span class="p">]),</span>
+                   <span class="n">Convert</span><span class="p">.</span><span class="n">ToSingle</span><span class="p">(</span><span class="n">striparr</span><span class="p">[</span><span class="m">3</span> <span class="p">*</span> <span class="n">i</span> <span class="p">+</span> <span class="n">positionOrder_1</span><span class="p">]),</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToSingle</span><span class="p">(</span><span class="n">striparr</span><span class="p">[</span><span class="m">3</span> <span class="p">*</span> <span class="n">i</span> <span class="p">+</span> <span class="n">positionOrder_2</span><span class="p">]));</span>
+                   <span class="n">particlesData</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">radius</span> <span class="p">=</span> <span class="n">particleRadius</span><span class="p">;</span>
+                   <span class="n">particlesData</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">color</span> <span class="p">=</span> <span class="n">particleColor</span><span class="p">;</span>
+               <span class="p">}</span>
+           <span class="p">}</span>
+       <span class="p">}</span>
+       <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">updateParticleBufferData</span><span class="p">()</span>
+       <span class="p">{</span>
+           <span class="k">base</span><span class="p">.</span><span class="n">updateParticleBufferData</span><span class="p">();</span>
+       <span class="p">}</span>
+
+   <span class="p">}</span>
+</pre></div>
+</div>
+<p>You can also refer to <code class="docutils literal notranslate"><span class="pre">SSF_LoadParticlesFromParticleSystem</span></code>, this is a bit complicated and tedious.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">SSF_Particle2Fluid_ShaderUtil</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Advance Topics</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Extend Particle Inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface_shading.html">Surface Shading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Advance Topics</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Advance Topics</a></li>
+      <li>Next: <a href="surface_shading.html" title="next chapter">Surface Shading</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, DongFang Liu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/advance_topics/extend_inputs.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
