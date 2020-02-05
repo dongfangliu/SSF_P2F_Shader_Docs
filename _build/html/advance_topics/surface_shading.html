@@ -84,7 +84,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Advance Topics</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="extend_inputs.html">Extend Particle Inputs</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Surface Shading</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Surface Shading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#textures-description">Textures Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#surface-shader">Surface Shader</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
@@ -156,6 +160,86 @@
             
   <div class="section" id="surface-shading">
 <h1>Surface Shading<a class="headerlink" href="#surface-shading" title="Permalink to this headline">¶</a></h1>
+<p>In previous asset, Surface Shading has lots of limitations:</p>
+<ul class="simple">
+<li><p>achieved by ImageEffects on Camera, which is no longer supported in <cite>URP</cite>.</p></li>
+<li><p>do not work well when there are transparent objects in scene.</p></li>
+<li><p>do not support mulitiple lights and global illumination.</p></li>
+</ul>
+<p>In a word, it limits as it’s just some sort of imageEffects.</p>
+<p>In our implementation, we <strong>reconstruct the fluid surface from textures</strong> using quads of different resolutions (or dimensions).</p>
+<p>Based on that, <cite>Amplify Shader Editor</cite> was used to write a surface shader <code class="docutils literal notranslate"><span class="pre">Fluid</span> <span class="pre">Surface.shader</span></code>  for that surface. <strong>Therefore the rendering process of fluid surface can be integrated into Unity’s Rendering Pipeline.</strong></p>
+<div class="section" id="textures-description">
+<h2>Textures Description<a class="headerlink" href="#textures-description" title="Permalink to this headline">¶</a></h2>
+<p>To understand how to change surface shading, textures generated from <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code> should be understood.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 13%" />
+<col style="width: 64%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Textures Name</p></td>
+<td><p>Texture Format</p></td>
+<td><p>Description</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DepthTexture</span></code></p></td>
+<td><p>R</p></td>
+<td><p>origin depth of particles in ViewSpace</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ThicknessTexture</span></code></p></td>
+<td><p>R</p></td>
+<td><p>describes how thick the fluid is from ViewSpace</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">NoiseTexture</span></code></p></td>
+<td><p>R</p></td>
+<td><p>used to peturb surface normal and add Foam effect, ViewSpace</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SmoothedDepthTexture</span></code></p></td>
+<td><p>R</p></td>
+<td><p>smoothed depth of particles in ViewSpace</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EyeSpaceNormalTexture</span></code></p></td>
+<td><p>RGBA</p></td>
+<td><p>fluid surface normal generated from <code class="docutils literal notranslate"><span class="pre">SmoothedDepthTexture</span></code> in ViewSpace</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EyeSpacePosTexture</span></code></p></td>
+<td><p>RGBA</p></td>
+<td><p>fluid surface position generated from <code class="docutils literal notranslate"><span class="pre">SmoothedDepthTexture</span></code> in ViewSpace</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="surface-shader">
+<h2>Surface Shader<a class="headerlink" href="#surface-shader" title="Permalink to this headline">¶</a></h2>
+<p>It’s already described that surface is created from a quad mesh.</p>
+<p>On enabling the <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code>, two things happen simultaneously.</p>
+<ul class="simple">
+<li><p>a script called <code class="docutils literal notranslate"><span class="pre">SSF_RenderSurface</span></code> will be attached.</p></li>
+<li><p>a GameObject which is the Surface Mesh will be attached as <strong>the child</strong> of <cite>ParticleSource</cite> of <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Tuning the parameters of <code class="docutils literal notranslate"><span class="pre">SSF_RenderSurface</span></code> and <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code> to ajust surface appearance .</p>
+</div>
+<p>Through opening the <code class="docutils literal notranslate"><span class="pre">Fluid</span> <span class="pre">Surface.shader</span></code>, the graph flow can be viewed.</p>
+<img alt="../_images/Shader_Graph.PNG" src="../_images/Shader_Graph.PNG" />
+<p>We mainly do following things:</p>
+<ol class="arabic simple">
+<li><p>render mesh as transparent object</p></li>
+<li><p>replace the quad’s vertices’ positions and normals with fluid surface normal and vertices.</p></li>
+<li><p>sample from <code class="docutils literal notranslate"><span class="pre">ThickenessTexture</span></code> to set opacity</p></li>
+<li><p>take fluid’s <cite>Index of Refraction</cite> into Consideration and set <code class="docutils literal notranslate"><span class="pre">Refraction</span></code> / <code class="docutils literal notranslate"><span class="pre">Reflection</span></code> port</p></li>
+<li><p>sample from <code class="docutils literal notranslate"><span class="pre">NoiseTexture</span></code> to peturb normal and add Foam Effect</p></li>
+<li><p>sample from <code class="docutils literal notranslate"><span class="pre">ColorTexture</span></code> to set <code class="docutils literal notranslate"><span class="pre">Albedo</span></code> port</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It’s recommended to open the <code class="docutils literal notranslate"><span class="pre">Fluid</span> <span class="pre">Surface.shader</span></code> using <cite>Amplify Shader Editor</cite>.</p>
+</div>
+<p>For customization purposes, you can copy this shader and make your customization.</p>
+<p>Then assign the shader as the <cite>Shader</cite> Input to <code class="docutils literal notranslate"><span class="pre">SSF_RenderSurface</span></code>.</p>
+</div>
 </div>
 
 
