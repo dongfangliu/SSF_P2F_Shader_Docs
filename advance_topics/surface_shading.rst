@@ -14,7 +14,7 @@ In our implementation, we **reconstruct the fluid surface from textures** using 
 Based on that, `Amplify Shader Editor` was used to write a surface shader ``Fluid Surface.shader``  for that surface. **Therefore the rendering process of fluid surface can be integrated into Unity's Rendering Pipeline.**
 
 Textures Description
-------------------
+---------------------
 To understand how to change surface shading, textures generated from ``SSF_TextureGenerator`` should be understood.
 
 +---------------------------+----------------+-----------------------------------------------------------------------------+
