@@ -37,7 +37,7 @@ Cofigure Renderer
      :scale: 50% 
 
 #. Disable and then enable the Component to take effect.
-   Component of type ``SSF_RenderSurface`` is automatically added.
+   Component of type ``SSF_RenderSurface`` should be automatically added.
 
 The meaning and effect of parameters can be checked in :doc:`../api/index` 
 

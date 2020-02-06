@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SSF_ParticleSource &mdash; SSF_Particle2Fluid_ShaderUtil 0.0.3 documentation</title>
+  <title>Debug Tips &mdash; SSF_Particle2Fluid_ShaderUtil 0.0.3 documentation</title>
   
 
   
@@ -35,7 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="API" href="index.html" /> 
+    <link rel="next" title="Advance Topics" href="../advance_topics/index.html" />
+    <link rel="prev" title="Step By Step Usage" href="workflow.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,13 +81,14 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advance_topics/index.html">Advance Topics</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">SSF_ParticleSource</a></li>
-<li class="toctree-l2"><a class="reference internal" href="RenderSurface.html">RenderSurface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Introduction</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="basic_setup.html">Basic Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Step By Step Usage</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Debug Tips</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../advance_topics/index.html">Advance Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
 </ul>
 
             
@@ -132,15 +134,15 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="index.html">API</a> &raquo;</li>
+          <li><a href="index.html">Introduction</a> &raquo;</li>
         
-      <li>SSF_ParticleSource</li>
+      <li>Debug Tips</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/ParticleSource.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/introduction/tips.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -153,19 +155,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ssf-particlesource">
-<h1>SSF_ParticleSource<a class="headerlink" href="#ssf-particlesource" title="Permalink to this headline">¶</a></h1>
-<p>This class has been explained clearly in <a class="reference internal" href="../advance_topics/extend_inputs.html"><span class="doc">Extend Particle Inputs</span></a></p>
-<p>This class provides data to <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code> for generating textures.</p>
+  <div class="section" id="debug-tips">
+<h1>Debug Tips<a class="headerlink" href="#debug-tips" title="Permalink to this headline">¶</a></h1>
+<p>The overall workflow of this plugin can be separated into 3 parts:</p>
+<ul class="simple">
+<li><p>Particles Data Input</p></li>
+<li><p>Texture Generating</p></li>
+<li><p>Surface Shading</p></li>
+</ul>
+<p>Here are some useful tips for users when using this plugin:</p>
+<ol class="arabic simple">
+<li><p>On anything regarding Graphics Changes (e.g. Saving/Exiting Scene, Saving Shader…), the <cite>ComputeBuffer</cite> used to generate textures will be discarded.</p></li>
+<li><p>Under all situations, the first step to debug is to check if <code class="docutils literal notranslate"><span class="pre">ParticleSource</span></code> was assigned on <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code></p></li>
+<li><p>If assigned, toggle On <code class="docutils literal notranslate"><span class="pre">checkVisualize</span></code> of <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code> and check TextureOutputs.</p></li>
+<li><p>If there’s colored output on <cite>EyeSpaceNormalTex</cite>, then problems exist on the surface shading part.</p></li>
+<li><p>If none, it could be two possible reasons during <cite>Texture Generating</cite>:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ParticleSource</span></code> is not providing data properly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ComputeBuffer</span></code> is lost for some reasons (may due to scene saving and loading).</p></li>
+</ol>
+</li>
+</ol>
+<p>This first reason may due to users’ buggy coding.</p>
+<p>To tackle down the second reason, you have to first reactive <code class="docutils literal notranslate"><span class="pre">ParticleSource</span></code>, then reactive <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code> uses the transform of <code class="docutils literal notranslate"><span class="pre">SSF_ParticleSource</span></code> as <strong>the model matrix</strong> for particles, please ensure it’s your expected model matrix.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Thus, if using multiple particleSystem,
-the <code class="docutils literal notranslate"><span class="pre">simulationSpace</span></code> should be setted to <code class="docutils literal notranslate"><span class="pre">World</span></code> and
-this script should be attached to a gameObject with Identity transform.</p>
+<p>Here, <strong>reactive</strong> means exactly <em>Disable and then Enable</em></p>
 </div>
 </div>
 
@@ -177,8 +192,10 @@ this script should be attached to a gameObject with Identity transform.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../advance_topics/index.html" class="btn btn-neutral float-right" title="Advance Topics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="index.html" class="btn btn-neutral float-left" title="API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="workflow.html" class="btn btn-neutral float-left" title="Step By Step Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

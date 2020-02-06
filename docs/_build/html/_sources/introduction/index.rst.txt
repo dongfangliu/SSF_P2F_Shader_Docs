@@ -46,3 +46,4 @@ I prepared several demo scenarios:
 
    basic_setup.rst
    workflow.rst
+   tips.rst

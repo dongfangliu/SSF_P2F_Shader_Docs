@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SSF_TextureGenerator &mdash; SSF_Particle2Fluid_ShaderUtil 0.0.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SSF_Particle2Fluid_ShaderUtil
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advance_topics/index.html">Advance Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SSF_Particle2Fluid_ShaderUtil</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>SSF_TextureGenerator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/SSF_TextureGenerator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ssf-texturegenerator">
+<h1>SSF_TextureGenerator<a class="headerlink" href="#ssf-texturegenerator" title="Permalink to this headline">¶</a></h1>
+<p><strong>SSF_TextureGenerator</strong> forks <code class="docutils literal notranslate"><span class="pre">particleBuffer</span></code> from <a class="reference internal" href="ParticleSource.html"><span class="doc">ParticleSource</span></a>
+and then generate Textures for further  <a class="reference internal" href="../advance_topics/surface_shading.html"><span class="doc">surface reconstruction and shading</span></a>.</p>
+<p>Its working logic can be summarized as follow:</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">OnEnable</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">&quot;[SSF] Enabled TextureGenerator &quot;</span><span class="p">+</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+    <span class="n">setupTextures</span><span class="p">();</span>
+    <span class="n">setupMaterials</span><span class="p">();</span>
+    <span class="c1">// Add Surface Mesh and shading if not exists.</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">SSF_RenderSurface</span><span class="p">&gt;()==</span><span class="k">null</span><span class="p">){</span>
+        <span class="n">gameObject</span><span class="p">.</span><span class="n">AddComponent</span><span class="p">&lt;</span><span class="n">SSF_RenderSurface</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+    <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">SSF_RenderSurface</span><span class="p">&gt;().</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="c1">// Set shading&#39;s texsource from this</span>
+    <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">SSF_RenderSurface</span><span class="p">&gt;().</span><span class="n">tex_source</span> <span class="p">=</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">void</span> <span class="nf">OnDisable</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">&quot;[SSF] Disabled TextureGenerator &quot;</span><span class="p">+</span> <span class="n">gameObject</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+    <span class="n">releaseTextures</span><span class="p">();</span>
+    <span class="n">releaseBuffers</span><span class="p">();</span>
+    <span class="n">DestroyImmediate</span><span class="p">(</span><span class="n">material_depthColorThickness</span><span class="p">);</span>
+    <span class="n">DestroyImmediate</span><span class="p">(</span><span class="n">material_noise</span><span class="p">);</span>
+    <span class="c1">//Disable Surface Shading</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">SSF_RenderSurface</span><span class="p">&gt;()!=</span><span class="k">null</span><span class="p">){</span>
+    <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">SSF_RenderSurface</span><span class="p">&gt;().</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then  Draw Textures On Each Frame:</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">void</span> <span class="nf">OnRenderObject</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">particleSource</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">particleSource</span><span class="p">.</span><span class="n">updateParticleBuffer</span><span class="p">();</span>
+        <span class="n">setParams</span><span class="p">();</span>
+        <span class="n">check_debugVisualize</span><span class="p">();</span>
+        <span class="n">drawColorTexture</span><span class="p">();</span>
+        <span class="n">drawDepthTexture</span><span class="p">();</span>
+        <span class="n">drawThicknessTexture</span><span class="p">();</span>
+        <span class="n">smoothDepthTexture</span><span class="p">();</span>
+        <span class="n">drawNoiseTexture</span><span class="p">();</span>
+        <span class="n">drawNormalViewDirTexture</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="param-tuning">
+<h2>Param Tuning<a class="headerlink" href="#param-tuning" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>smoothIterations</dt><dd><p>Describes how many smoothing operations each frame, normally 50-120 is suitable</p>
+</dd>
+<dt>smothed_dt</dt><dd><p>Describes the timestep dt for each smothing operation, normally 5e-4 is suitable</p>
+</dd>
+<dt>estimated_dz_t</dt><dd><p>From some sense, it amplifies the smoothing effect of above params, normally 1000</p>
+</dd>
+<dt>thicknessAmplifier</dt><dd><p>Controls <cite>thicknessTexture</cite>’s output magnitude</p>
+</dd>
+<dt>basicNoiseTex</dt><dd><p>Render each Particle with a basicNoiseTex, generate a <cite>noiseTexture</cite> for fluid shading</p>
+</dd>
+<dt>noiseAmplifier</dt><dd><p>Controls <cite>noiseTexture</cite>’s output magnitude</p>
+</dd>
+<dt>textureSize</dt><dd><p>Controls the Texture Size of Texture ouput with <code class="docutils literal notranslate"><span class="pre">textureSize*textureSize</span></code></p>
+</dd>
+<dt>debug_visualize</dt><dd><p>If toggle on, it will copy <code class="docutils literal notranslate"><span class="pre">*Texture_ouput</span></code> to <code class="docutils literal notranslate"><span class="pre">*Texture_debug</span></code> for debug purposes.
+This requires two kinds of textures share the same format and dimension.</p>
+</dd>
+<dt>fluid_surface_meshes</dt><dd><p>Array of Plane meshes with different resolutions, corresponding to <cite>surfaceQuality</cite> in  <code class="docutils literal notranslate"><span class="pre">SSF_RenderSurface</span></code></p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, DongFang Liu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
