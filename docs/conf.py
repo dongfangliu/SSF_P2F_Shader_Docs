@@ -23,7 +23,7 @@ author = 'DongFang Liu'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.3'
-master_doc = 'index.rst'
+master_doc = 'index'
 
 # -- General configuration ---------------------------------------------------
 

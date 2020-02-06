@@ -243,10 +243,10 @@ var Documentation = {
       var src = $(this).attr('src');
       var idnum = $(this).attr('id').substr(7);
       $('tr.cg-' + idnum).toggle();
-      if (src.substr(-9) === 'minus.PNG')
-        $(this).attr('src', src.substr(0, src.length-9) + 'plus.PNG');
+      if (src.substr(-9) === 'minus.png')
+        $(this).attr('src', src.substr(0, src.length-9) + 'plus.png');
       else
-        $(this).attr('src', src.substr(0, src.length-8) + 'minus.PNG');
+        $(this).attr('src', src.substr(0, src.length-8) + 'minus.png');
     }).css('display', '');
     if (DOCUMENTATION_OPTIONS.COLLAPSE_INDEX) {
         togglers.click();
