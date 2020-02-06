@@ -18,12 +18,12 @@ In the process of using, I feel that I can do better, no matter from the efficie
 
 I prepared several demo scenarios:
 
-.. figure:: ../images/DEMO_File.PNG
+.. figure:: ../images/Demo_File.PNG
    :align: center
    
    [DEMO] Load particles from file
 
-.. figure:: ../images/DEMO_Blood.PNG
+.. figure:: ../images/Demo_Blood.PNG
    :align: center
    
    [DEMO] Blood
