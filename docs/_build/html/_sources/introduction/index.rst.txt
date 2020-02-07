@@ -11,8 +11,6 @@ Unity does not have a very suitable fluid rendering plugin, which is the main re
 
 In the process of using, I feel that I can do better, no matter from the efficiency or visual effects or ease of use and scalability, thus this plugin was born.
 
-.. image:: ../images/comparision.png
-
 
 .. note:: This plugin is developed on `Unity 2019.3.0f5 (64-bit)` version and supports `Unity Builtin Shader System` and `Unity URP System`. It runs more efficiently on the Unity Builtin Shader System and is not optimized for URP.
 

@@ -18,6 +18,8 @@ It has the following very good properties:
 * Open data customization interface
 * Complete documentation and improvement guidelines
 
+.. image:: ./images/comparision.png
+
 
 .. toctree::
    :maxdepth: 2
