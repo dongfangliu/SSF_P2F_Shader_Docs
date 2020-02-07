@@ -46,7 +46,7 @@ On enabling the ``SSF_TextureGenerator``, two things happen simultaneously.
 
 Through opening the ``Fluid Surface.shader``, the graph flow can be viewed.
 
-.. image:: ../images/Shader_Graph.PNG
+.. image:: ../images/Shader_Graph.png
 
 
 We mainly do following things:
@@ -54,7 +54,8 @@ We mainly do following things:
 #. render mesh as transparent object
 #. replace the quad's vertices' positions and normals with fluid surface normal and vertices.
 #. sample from ``ThickenessTexture`` to set opacity
-#. take fluid's `Index of Refraction` into Consideration and set ``Refraction`` / ``Reflection`` port
+#. sample from ``ThickenessTexture`` and use `Lambert-Beer Law` to set ``Specular``
+#. take fluid's `Index of Refraction` into Consideration and set ``Refraction`` 
 #. sample from ``NoiseTexture`` to peturb normal and add Foam Effect
 #. sample from ``ColorTexture`` to set ``Albedo`` port
 

@@ -9,7 +9,10 @@ Fluid simulation is generally based on grids or particles. In consideration of r
 
 Unity does not have a very suitable fluid rendering plugin, which is the main reason for this plugin. I also noticed that there is indeed an implementation based on the same principle on the Asset Store.
 
-In the process of using, I feel that I can do better, no matter from the efficiency or visual effects or ease of use and scalability, so this plugin was born.
+In the process of using, I feel that I can do better, no matter from the efficiency or visual effects or ease of use and scalability, thus this plugin was born.
+
+.. image:: ../images/comparision.png
+
 
 .. note:: This plugin is developed on `Unity 2019.3.0f5 (64-bit)` version and supports `Unity Builtin Shader System` and `Unity URP System`. It runs more efficiently on the Unity Builtin Shader System and is not optimized for URP.
 

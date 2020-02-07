@@ -169,19 +169,24 @@
 </ol>
 <div class="section" id="param-tuning">
 <h2>Param Tuning<a class="headerlink" href="#param-tuning" title="Permalink to this headline">¶</a></h2>
+<img alt="../_images/SSF_RenderSurface.png" src="../_images/SSF_RenderSurface.png" />
 <dl class="simple">
 <dt>shader</dt><dd><p>shader used to reconstruct surface and rendering.</p>
 </dd>
+<dt>fluid_ior</dt><dd><p>controls the Index of Refration of fluid, water is 1.333</p>
+</dd>
 <dt>surfaceQuality</dt><dd><p>Fluid Surface Subdivision Level,corresponding to <code class="docutils literal notranslate"><span class="pre">fluid_surface_meshes</span></code>
 in <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code>.</p>
+</dd>
+<dt>min/max_specular:</dt><dd><p>control specular of fluid surface, as the specular is generated based on <cite>Lambert-Beer Law</cite></p>
 </dd>
 <dt>smoothness</dt><dd><p>controls Reflectivity,0 is roughest,1 is smoothest</p>
 </dd>
 <dt>transperancy</dt><dd><p>controls opacity based on <cite>thickness</cite>, 0 is transparent, 1 is fully non-transparent</p>
 </dd>
-<dt>noiseStrength</dt><dd><p>controls the magnitude of Foam Effect and Normal Peturbition.</p>
+<dt>min/max_opacity:</dt><dd><p>controls the bounds of opacity, 0 is transparent, 1 is fully non-transparent</p>
 </dd>
-<dt>fluid_ior</dt><dd><p>controls the Index of Refration of fluid, water is 1.333</p>
+<dt>noiseStrength</dt><dd><p>controls the significance of Foam Effect and Normal Peturbition.</p>
 </dd>
 </dl>
 </div>

@@ -223,13 +223,14 @@
 <p>Tuning the parameters of <code class="docutils literal notranslate"><span class="pre">SSF_RenderSurface</span></code> and <code class="docutils literal notranslate"><span class="pre">SSF_TextureGenerator</span></code> to ajust surface appearance .</p>
 </div>
 <p>Through opening the <code class="docutils literal notranslate"><span class="pre">Fluid</span> <span class="pre">Surface.shader</span></code>, the graph flow can be viewed.</p>
-<img alt="../_images/Shader_Graph.PNG" src="../_images/Shader_Graph.PNG" />
+<img alt="../_images/Shader_Graph.png" src="../_images/Shader_Graph.png" />
 <p>We mainly do following things:</p>
 <ol class="arabic simple">
 <li><p>render mesh as transparent object</p></li>
 <li><p>replace the quad’s vertices’ positions and normals with fluid surface normal and vertices.</p></li>
 <li><p>sample from <code class="docutils literal notranslate"><span class="pre">ThickenessTexture</span></code> to set opacity</p></li>
-<li><p>take fluid’s <cite>Index of Refraction</cite> into Consideration and set <code class="docutils literal notranslate"><span class="pre">Refraction</span></code> / <code class="docutils literal notranslate"><span class="pre">Reflection</span></code> port</p></li>
+<li><p>sample from <code class="docutils literal notranslate"><span class="pre">ThickenessTexture</span></code> and use <cite>Lambert-Beer Law</cite> to set <code class="docutils literal notranslate"><span class="pre">Specular</span></code></p></li>
+<li><p>take fluid’s <cite>Index of Refraction</cite> into Consideration and set <code class="docutils literal notranslate"><span class="pre">Refraction</span></code></p></li>
 <li><p>sample from <code class="docutils literal notranslate"><span class="pre">NoiseTexture</span></code> to peturb normal and add Foam Effect</p></li>
 <li><p>sample from <code class="docutils literal notranslate"><span class="pre">ColorTexture</span></code> to set <code class="docutils literal notranslate"><span class="pre">Albedo</span></code> port</p></li>
 </ol>
